@@ -112,7 +112,8 @@ class TicketsController extends Controller
     {
         abort_if(Gate::denies('ticket_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $statuses = Status::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $statuses = Status::where('id', 3)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        // $statuses = Status::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $priorities = Priority::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
