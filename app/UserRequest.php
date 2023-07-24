@@ -77,4 +77,9 @@ class UserRequest extends Authenticatable
     {
         return $this->roles->contains(1);
     }
+    
+    public function isPM()
+    {
+        return $this->roles->contains(4);
+    }
 }
