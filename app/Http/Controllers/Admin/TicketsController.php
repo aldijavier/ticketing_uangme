@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Category;
+use App\UserRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyTicketRequest;
@@ -16,6 +17,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Auth;
 
 class TicketsController extends Controller
 {
@@ -23,6 +25,8 @@ class TicketsController extends Controller
 
     public function index(Request $request)
     {
+        // Add this line to get the currently logged-in user
+        $user = Auth::user();
         if ($request->ajax()) {
             $query = Ticket::with(['status', 'priority', 'category', 'assigned_to_user', 'comments'])
                 ->filterTickets($request)
@@ -101,7 +105,7 @@ class TicketsController extends Controller
         $statuses = Status::all();
         $categories = Category::all();
 
-        return view('admin.tickets.index', compact('priorities', 'statuses', 'categories'));
+        return view('admin.tickets.index', compact('priorities', 'statuses', 'categories', 'user'));
     }
 
     public function create()
@@ -114,13 +118,17 @@ class TicketsController extends Controller
 
         $categories = Category::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
+        $userRequest = UserRequest::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $assigned_to_users = User::whereHas('roles', function($query) {
                 $query->whereId(2);
             })
             ->pluck('name', 'id')
             ->prepend(trans('global.pleaseSelect'), '');
+        
+        $user = Auth::user();
 
-        return view('admin.tickets.create', compact('statuses', 'priorities', 'categories', 'assigned_to_users'));
+        return view('admin.tickets.create', compact('statuses', 'priorities', 'categories', 'assigned_to_users', 'user', 'userRequest'));
     }
 
     public function store(StoreTicketRequest $request)

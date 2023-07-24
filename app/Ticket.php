@@ -30,14 +30,16 @@ class Ticket extends Model implements HasMedia
 
     protected $fillable = [
         'title',
-        'content',
         'status_id',
+        'request',
+        'requestdesc',
+        'notifyProduct',
         'created_at',
         'updated_at',
         'deleted_at',
         'priority_id',
         'category_id',
-        'author_name',
+        'userRequest',
         'author_email',
         'assigned_to_user_id',
     ];
