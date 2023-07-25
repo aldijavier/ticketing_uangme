@@ -139,7 +139,7 @@
                 </tbody>
             </table>
         </div>
-        <a class="btn btn-default my-2" href="{{ route('admin.tickets.index') }}">
+        <a class="btn btn-default my-2" href="{{ route('admin.codereview.index') }}">
             {{ trans('global.back_to_list') }}
         </a>
 

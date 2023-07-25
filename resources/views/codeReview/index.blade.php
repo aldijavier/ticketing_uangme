@@ -95,7 +95,7 @@ $('.card-body').on('change', 'select', function() {
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.tickets.massDestroy') }}",
+    url: "{{ route('admin.codereview.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
@@ -128,7 +128,7 @@ $('.card-body').on('change', 'select', function() {
     retrieve: true,
     aaSorting: [],
     ajax: {
-      url: "{{ route('admin.tickets.index') }}",
+      url: "{{ route('admin.codereview.index') }}",
       data: {
         'status': searchParams.get('status'),
         'priority': searchParams.get('priority'),

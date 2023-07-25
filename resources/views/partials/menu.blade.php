@@ -47,7 +47,7 @@
                                     <i class="fa-fw fas fa-user nav-icon">
 
                                     </i>
-                                    User Requests
+                                    User Request
                                 </a>
                             </li>
                         @endcan
@@ -121,6 +121,15 @@
 
                         </i>
                         {{ trans('cruds.comment.title') }}
+                    </a>
+                </li>
+            @endcan
+            @can('code_review_access')
+                <li class="nav-item">
+                    <a href="{{ route("admin.codereview.index") }}" class="nav-link {{ request()->is('admin/codereview') || request()->is('admin/codereview/*') ? 'active' : '' }}">
+                        <i class="fa-fw fas fa-question-circle nav-icon">
+                        </i>
+                        Code Review
                     </a>
                 </li>
             @endcan

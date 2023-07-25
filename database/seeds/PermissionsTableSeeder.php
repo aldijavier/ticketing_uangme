@@ -192,6 +192,10 @@ class PermissionsTableSeeder extends Seeder
                 'id'    => '46',
                 'title' => 'user_request_create',
             ],
+            [
+                'id'    => '47',
+                'title' => 'code_review_access',
+            ],
         ];
 
         Permission::insert($permissions);
