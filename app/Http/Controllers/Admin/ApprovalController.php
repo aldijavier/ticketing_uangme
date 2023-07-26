@@ -8,10 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyTicketRequest;
 use App\Http\Requests\StoreTicketRequest;
+use App\Http\Requests\StoreRequestApproval;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Priority;
 use App\Status;
 use App\Ticket;
+use App\Approval;
 use App\User;
 use Gate;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
 
-class CodeReviewController extends Controller
+class ApprovalController extends Controller
 {
     use MediaUploadingTrait;
 
@@ -29,7 +31,7 @@ class CodeReviewController extends Controller
         $user = Auth::user();
         if ($request->ajax()) {
             $query = Ticket::with(['status', 'priority', 'category', 'assigned_to_user', 'comments'])
-                ->whereIn('status_id', [4, 5])
+                ->where('status_id', 5)
                 ->filterTickets($request)
                 ->select(sprintf('%s.*', (new Ticket)->table));
             $table = Datatables::of($query);
@@ -38,15 +40,11 @@ class CodeReviewController extends Controller
             $table->addColumn('actions', '&nbsp;');
 
             $table->editColumn('actions', function ($row) {
-                $viewGate      = 'ticket_show';
-                $editGate      = 'ticket_edit';
-                $deleteGate    = 'ticket_delete';
-                $crudRoutePart = 'tickets';
+                $approvalUserGate      = 'ticket_show';
+                $crudRoutePart = 'approval';
 
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
+                return view('partials.datatablesActionsApproval', compact(
+                    'approvalUserGate',
                     'crudRoutePart',
                     'row'
                 ));
@@ -103,19 +101,22 @@ class CodeReviewController extends Controller
         }
 
         $priorities = Priority::all();
-        // $statuses = Status::all();
-        $statuses = Status::where('id', 4)->get();
+        $statuses = Status::all();
         $categories = Category::all();
 
-        return view('codereview.index', compact('priorities', 'statuses', 'categories', 'user'));
+        return view('approval.index', compact('priorities', 'statuses', 'categories', 'user'));
     }
 
     public function create()
     {
-        abort_if(Gate::denies('ticket_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('approval_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $statuses = Status::where('id', 3)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
         // $statuses = Status::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $ticketUser = Ticket::where('status_id', 5)
+                    ->pluck('request', 'id')
+                    ->prepend(trans('global.pleaseSelect'), '');
 
         $priorities = Priority::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -124,25 +125,25 @@ class CodeReviewController extends Controller
         $userRequest = UserRequest::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $assigned_to_users = User::whereHas('roles', function($query) {
-                $query->whereId(2);
+                $query->whereId(3);
             })
             ->pluck('name', 'id')
             ->prepend(trans('global.pleaseSelect'), '');
         
         $user = Auth::user();
 
-        return view('admin.tickets.create', compact('statuses', 'priorities', 'categories', 'assigned_to_users', 'user', 'userRequest'));
+        return view('approval.create', compact('ticketUser', 'statuses', 'priorities', 'categories', 'assigned_to_users', 'user', 'userRequest'));
     }
 
     public function store(StoreTicketRequest $request)
     {
-        $ticket = Ticket::create($request->all());
+        $ticket = Approval::create($request->all());
 
         foreach ($request->input('attachments', []) as $file) {
             $ticket->addMedia(storage_path('tmp/uploads/' . $file))->toMediaCollection('attachments');
         }
 
-        return redirect()->route('admin.tickets.index');
+        return redirect()->route('admin.approval.index');
     }
 
     public function edit(Ticket $ticket)
@@ -150,6 +151,8 @@ class CodeReviewController extends Controller
         abort_if(Gate::denies('ticket_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $statuses = Status::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $ticketUser = Ticket::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $priorities = Priority::all()->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -163,7 +166,7 @@ class CodeReviewController extends Controller
 
         $ticket->load('status', 'priority', 'category', 'assigned_to_user');
 
-        return view('admin.tickets.edit', compact('statuses', 'priorities', 'categories', 'assigned_to_users', 'ticket'));
+        return view('admin.tickets.edit', compact('ticketUser', 'statuses', 'priorities', 'categories', 'assigned_to_users', 'ticket'));
     }
 
     public function update(UpdateTicketRequest $request, Ticket $ticket)

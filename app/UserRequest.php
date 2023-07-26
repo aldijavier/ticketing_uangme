@@ -82,4 +82,8 @@ class UserRequest extends Authenticatable
     {
         return $this->roles->contains(4);
     }
+    public function isQA()
+    {
+        return $this->roles->contains(5);
+    }
 }

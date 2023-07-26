@@ -133,6 +133,15 @@
                     </a>
                 </li>
             @endcan
+            <!-- @can('approval_access')
+                <li class="nav-item">
+                    <a href="{{ route("admin.approval.index") }}" class="nav-link {{ request()->is('admin/approval') || request()->is('admin/approval/*') ? 'active' : '' }}">
+                        <i class="fa fa-thumbs-o-up nav-icon">
+                        </i>
+                        Approval Access
+                    </a>
+                </li>
+            @endcan -->
             <li class="nav-item">
                 <a href="#" class="nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">
                     <i class="nav-icon fas fa-fw fa-sign-out-alt">

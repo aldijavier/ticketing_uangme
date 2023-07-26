@@ -1,17 +1,8 @@
 @extends('layouts.admin')
 @section('content')
-@can('approval_access')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-info" href="{{ route("admin.approval.create") }}">
-            Create Ticket for Approval User
-            </a>
-        </div>
-    </div>
-@endcan
 <div class="card">
     <div class="card-header">
-        {{ trans('cruds.ticket.title_singular') }} {{ trans('global.list') }}
+        Create Ticket for Approval User
     </div>
 
     <div class="card-body">
@@ -95,7 +86,7 @@ $('.card-body').on('change', 'select', function() {
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.codereview.massDestroy') }}",
+    url: "{{ route('admin.tickets.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
@@ -128,7 +119,7 @@ $('.card-body').on('change', 'select', function() {
     retrieve: true,
     aaSorting: [],
     ajax: {
-      url: "{{ route('admin.codereview.index') }}",
+      url: "{{ route('admin.approval.index') }}",
       data: {
         'status': searchParams.get('status'),
         'priority': searchParams.get('priority'),

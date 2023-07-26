@@ -11,11 +11,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class Approval extends Authenticatable
 {
     use SoftDeletes, Notifiable, HasApiTokens;
 
-    public $table = 'users';
+    public $table = 'approval_ticket';
 
     protected $hidden = [
         'password',
@@ -30,14 +30,15 @@ class User extends Authenticatable
     ];
 
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'ticket_id',
+        'category_id',
+        'user_request',
+        'modification',
+        'url',
+        'assigned_to_user_id',
         'created_at',
         'updated_at',
         'deleted_at',
-        'remember_token',
-        'email_verified_at',
     ];
 
     public function tickets()
@@ -81,6 +82,7 @@ class User extends Authenticatable
     {
         return $this->roles->contains(1);
     }
+    
     public function isPM()
     {
         return $this->roles->contains(4);

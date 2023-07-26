@@ -55,6 +55,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('codereview/destroy', 'UsersController@massDestroy')->name('codereview.massDestroy');
     Route::resource('codereview', 'CodeReviewController');
 
+    // Approval
+    Route::delete('approval/destroy', 'ApprovalController@massDestroy')->name('approval.massDestroy');
+    Route::resource('approval', 'ApprovalController');
+
     // Comments
     Route::delete('comments/destroy', 'CommentsController@massDestroy')->name('comments.massDestroy');
     Route::resource('comments', 'CommentsController');

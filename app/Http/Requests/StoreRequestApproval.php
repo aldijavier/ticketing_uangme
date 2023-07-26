@@ -2,16 +2,16 @@
 
 namespace App\Http\Requests;
 
-use App\Ticket;
+use App\Approval;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
 
-class StoreTicketRequest extends FormRequest
+class StoreRequestApproval extends FormRequest
 {
     public function authorize()
     {
-        abort_if(Gate::denies('ticket_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('ticket_approval'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return true;
     }
@@ -19,6 +19,14 @@ class StoreTicketRequest extends FormRequest
     public function rules()
     {
         return [
+            'modification' => [
+                'required',
+                'integer',
+            ],
+            'category_id' => [
+                'required',
+                'integer',
+            ],
             'category_id' => [
                 'required',
                 'integer',
