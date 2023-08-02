@@ -16,16 +16,16 @@
                         {{ trans('cruds.ticket.fields.id') }}
                     </th>
                     <th>
-                        Requester
+                        Category
                     </th>
                     <th>
-                        {{ trans('cruds.ticket.fields.status') }}
+                        User Request
                     </th>
                     <th>
-                        {{ trans('cruds.ticket.fields.priority') }}
+                        Modification
                     </th>
                     <th>
-                        {{ trans('cruds.ticket.fields.category') }}
+                        URL / Link
                     </th>
                     <!-- <th>
                         {{ trans('cruds.ticket.fields.author_name') }}
@@ -86,7 +86,7 @@ $('.card-body').on('change', 'select', function() {
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('admin.tickets.massDestroy') }}",
+    url: "{{ route('admin.approval.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
@@ -130,21 +130,21 @@ $('.card-body').on('change', 'select', function() {
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
 {
-    data: 'title',
-    name: 'title', 
+    data: 'ticket_id',
+    name: 'ticket_id', 
     render: function ( data, type, row) {
-        return '<a href="'+row.view_link+'">'+data+' ('+row.comments_count+')</a>';
+        return '<a href="'+row.view_link+'">'+data+'</a>';
     }
 },
 { 
-  data: 'status_name', 
-  name: 'status.name', 
+  data: 'category_id', 
+  name: 'category.name', 
   render: function ( data, type, row) {
       return '<span style="color:'+row.status_color+'">'+data+'</span>';
   }
 },
 { 
-  data: 'priority_name', 
+  data: 'user_request', 
   name: 'priority.name', 
   render: function ( data, type, row) {
       return '<span style="color:'+row.priority_color+'">'+data+'</span>';
@@ -152,11 +152,13 @@ $('.card-body').on('change', 'select', function() {
 },
 { 
   data: 'category_name', 
-  name: 'category.name', 
+  name: 'category.name',
   render: function ( data, type, row) {
       return '<span style="color:'+row.category_color+'">'+data+'</span>';
   } 
 },
+
+
 // { data: 'author_name', name: 'author_name' },
 // { data: 'author_email', name: 'author_email' },
 { data: 'assigned_to_user_name', name: 'assigned_to_user.name' },

@@ -29,4 +29,9 @@ class Category extends Model
     {
         return $this->hasMany(Ticket::class, 'category_id', 'id');
     }
+
+    public function approval()
+    {
+        return $this->hasMany(Approval::class, 'category_id', 'id');
+    }
 }

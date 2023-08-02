@@ -30,12 +30,10 @@ class ApprovalController extends Controller
         // Add this line to get the currently logged-in user
         $user = Auth::user();
         if ($request->ajax()) {
-            $query = Ticket::with(['status', 'priority', 'category', 'assigned_to_user', 'comments'])
-                ->where('status_id', 5)
-                ->filterTickets($request)
-                ->select(sprintf('%s.*', (new Ticket)->table));
-            $table = Datatables::of($query);
+            $query = Approval::all();
+$table = Datatables::of($query);
 
+$table = Datatables::of($query);
             $table->addColumn('placeholder', '&nbsp;');
             $table->addColumn('actions', '&nbsp;');
 
@@ -63,7 +61,7 @@ class ApprovalController extends Controller
                 return $row->status ? $row->status->color : '#000000';
             });
 
-            $table->addColumn('priority_name', function ($row) {
+            $table->addColumn('url', function ($row) {
                 return $row->priority ? $row->priority->name : '';
             });
             $table->addColumn('priority_color', function ($row) {

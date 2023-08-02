@@ -23,7 +23,7 @@
             </div>
             <div class="form-group {{ $errors->has('ticketUser_id') ? 'has-error' : '' }}">
                 <label for="UserReq">Ticket ID *</label>
-                <select name="ticketUser_id" id="ticket_id" class="form-control select" required>
+                <select name="ticket_id" id="ticket_id" class="form-control select" required>
                     @foreach($ticketUser as $id => $ticketUser)
                         <option value="{{ $id }}" {{ (isset($ticket) && $ticket->ticketUser ? $ticket->ticket_id->id : old('id')) == $id ? 'selected' : '' }}>
                         {{ $id }} - {{ $ticketUser }}</option>
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group {{ $errors->has('userRequest_id') ? 'has-error' : '' }}">
                 <label for="UserReq">User Request *</label>
-                <select name="userRequest_id" id="userRequest" class="form-control select" required>
+                <select name="userRequest" id="userRequest" class="form-control select" required>
                     @foreach($userRequest as $id => $userRequest)
                         <option value="{{ $id }}" {{ (isset($ticket) && $ticket->userRequest ? $ticket->userRequest->id : old('id')) == $id ? 'selected' : '' }}>{{ $userRequest }}</option>
                     @endforeach
